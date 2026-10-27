@@ -341,6 +341,8 @@ class RenderAnnotation(GenericTypeRewriter[str]):
         return rendered
 
     def rewrite_container_type(self, container_type: Any) -> str:
+        if container_type is Union:
+            return "typing.Union"
         return repr(container_type)
 
     def rewrite_malformed_container(self, container: Any) -> str:
@@ -587,7 +589,7 @@ class ReplaceTypedDictsWithStubs(TypeRewriter):
 
         Otherwise, Tuple[TypedDict(...), TypedDict(...)] would give the same
         name for both the generated classes."""
-        if container.__module__ != "typing":
+        if container.__module__ not in ("typing", "types"):
             return container
         args = getattr(container, "__args__", None)
         if args is None:

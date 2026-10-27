@@ -276,7 +276,7 @@ class GenericTypeRewriter(Generic[T], ABC):
     def rewrite_type_variable(self, type_variable): ...
 
     def _rewrite_container(self, cls, container):
-        if container.__module__ != "typing":
+        if container.__module__ not in ("typing", "types"):
             return self.rewrite_malformed_container(container)
         args = getattr(container, "__args__", None)
         if args is None:
